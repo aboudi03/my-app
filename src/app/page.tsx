@@ -47,7 +47,14 @@ const MainPage = () => {
     const getListings = async () => {
       try {
         const data = await fetchListings();
-        setListings(data);
+        console.log('Fetched data:', data); // Log the fetched data
+        // Extract the listings array from the response object
+        if (Array.isArray(data.listings)) {
+          setListings(data.listings); // Set the listings state with the correct array
+        } else {
+          console.error('Expected listings to be an array, but received:', data.listings);
+          setError('Invalid data format received from the server.');
+        }
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);
@@ -58,6 +65,8 @@ const MainPage = () => {
         setLoading(false); // Ensure this runs to end loading state
       }
     };
+    
+  
     getListings();
   }, []);
 
